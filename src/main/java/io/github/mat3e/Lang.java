@@ -1,17 +1,38 @@
 package io.github.mat3e;
 
-public class Lang {
-    private Long id;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+
+
+@Entity
+@Table(name = "LANGUAGES")
+class Lang {
+    @Id
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
+    private Integer id;
     private String welcomeMsg;
     private String code;
 
-    public Lang(Long id, String welcomeMsg, String code) {
+    /**
+     * Hibernate (JPA) needs it.
+     * */
+     @SuppressWarnings("unused")
+     Lang() {
+     }
+
+
+    public Lang(Integer id, String welcomeMsg, String code) {
         this.id = id;
         this.welcomeMsg = welcomeMsg;
         this.code = code;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

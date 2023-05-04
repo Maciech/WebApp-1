@@ -1,18 +1,27 @@
 package io.github.mat3e;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Optional;
 
-public class LangRepository {
-    private List<Lang> languages;
+ class LangRepository {
+     private final Logger logger = LoggerFactory.getLogger(LangRepository.class);
+    Optional<Lang> findById(Integer id){
+        var session = HibernateUtil.getSessionFactory().openSession();
+        var transaction = session.beginTransaction();
 
-    LangRepository(){
-        languages = new ArrayList<>();
-        languages.add(new Lang(1L, "Hello", "en"));
-        languages.add(new Lang(2L, "Czesc", "pl"));
-    }
-    Optional<Lang> findById(Long id){
-        return languages.stream().filter(l -> l.getId().equals(id)).findFirst();
+        logger.info(""+id);
+        var result = session.get(Lang.class, id);
+
+        //logger.info(result1.toString());
+        try{
+            logger.info(result.getWelcomeMsg());
+        } catch (Exception e){
+            logger.info("cannot read from db");
+        }
+        transaction.commit();
+        session.close();
+        return Optional.ofNullable(result);
     }
 }
